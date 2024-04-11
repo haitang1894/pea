@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pea.business.sys.mapper.SysOperationLogMapper">
+
+    <!-- resultMap映射 -->
+    <resultMap id="BaseResultMap" type="com.pea.business.sys.domain.SysOperationLog">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="request_method" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="req_ip" property="reqIp" jdbcType="VARCHAR"/>
+        <result column="req_param" property="reqParam" jdbcType="VARCHAR"/>
+        <result column="resp" property="resp" jdbcType="VARCHAR"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="create_id" property="createId" jdbcType="BIGINT"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_id" property="updateId" jdbcType="BIGINT"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- SQL片段，列出表的所有基础字段 -->
+    <sql id="baseColumns">
+        t.id,
+        t.type,
+        t.method,
+        t.request_method,
+        t.description,
+        t.req_ip,
+        t.req_param,
+        t.resp,
+        t.error_msg,
+        t.create_id,
+        t.create_by,
+        t.create_time,
+        t.update_id,
+        t.update_by,
+        t.update_time,
+        t.is_deleted,
+        t.delete_time
+    </sql>
+
+    <update id="clean">
+        truncate table t_sys_log
+    </update>
+
+</mapper>

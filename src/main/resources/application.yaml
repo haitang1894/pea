@@ -1,0 +1,52 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 9528
+
+spring:
+  profiles:
+    active: local
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: BfHiGpMfztFYwAEKBRGB #JWT加解密使用的密钥
+  expiration: 43200 #JWT的超期限时间(12*60*60) 12小时
+  tokenHead: 'Bearer '  #JWT负载中拿到开头
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  typeAliasesPackage: com.pea.business.*.*.domain
+  global-config:
+    db-config:
+      id-type: AUTO
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: '系统管理'
+      paths-to-match: '/**'
+      packages-to-scan: com.pea.business.sys
+    - group: 'auth'
+      display-name: '认证模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.pea.business.auth
+  default-flat-param-object: true
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

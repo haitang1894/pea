@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pea.business.sys.mapper.SysRoleMapper">
+
+    <!-- resultMap映射 -->
+    <resultMap id="BaseResultMap" type="com.pea.business.sys.domain.SysRole">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="role_desc" property="roleDesc" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="create_id" property="createId" jdbcType="BIGINT"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="BIGINT"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="INTEGER"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- SQL片段，列出表的所有基础字段 -->
+    <sql id="baseColumns">
+        t.id,
+        t.role_name,
+        t.role_code,
+        t.status,
+        t.role_desc,
+        t.type,
+        t.create_id,
+        t.create_by,
+        t.update_id,
+        t.update_by,
+        t.create_time,
+        t.update_time,
+        t.is_deleted,
+        t.delete_time
+    </sql>
+
+    <select id="getUserRole" resultType="java.lang.String" parameterType="java.lang.String">
+        select role_name from t_sys_role tsr where tsr.id in (select role_id from t_sys_user_role where user_id = ${id})
+    </select>
+
+
+</mapper>

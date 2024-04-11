@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pea.business.sys.mapper.SysUserMapper">
+
+    <!-- resultMap映射 -->
+    <resultMap id="BaseResultMap" type="com.pea.business.sys.domain.SysUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="otp_secret" property="otpSecret" jdbcType="VARCHAR"/>
+        <result column="user_gender" property="userGender" jdbcType="VARCHAR"/>
+        <result column="user_phone" property="userPhone" jdbcType="VARCHAR"/>
+        <result column="user_email" property="userEmail" jdbcType="VARCHAR"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR"/>
+        <result column="create_id" property="createId" jdbcType="BIGINT"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="BIGINT"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="INTEGER"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- SQL片段，列出表的所有基础字段 -->
+    <sql id="baseColumns">
+        t.id,
+        t.nick_name,
+        t.user_name,
+        t.password,
+        t.status,
+        t.otp_secret,
+        t.user_gender,
+        t.user_phone,
+        t.user_email,
+        t.last_login_time,
+        t.last_login_ip,
+        t.create_id,
+        t.create_by,
+        t.update_id,
+        t.update_by,
+        t.create_time,
+        t.update_time,
+        t.is_deleted,
+        t.delete_time
+    </sql>
+
+    <!-- 这里省略具体的SQL查询语句，比如selectById, selectAll等 -->
+
+</mapper>
