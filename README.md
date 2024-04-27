@@ -19,6 +19,12 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 | mysql        | 8.0.33 |
 | ...          | ...    |
 
+## TODO
+
+- [ ] 优化补充菜单
+- [ ] 优化日志管理
+- [ ] 开发实现Google二次认证
+
 ## 后端部署
 
 > - **GitHub仓库地址:** https://github.com/haitang1894/pea.git
