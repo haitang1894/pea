@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("碧烟系统接口文档")
+                        .title("Pea系统接口文档")
                         .version("1.0.0")
                 )
                 // 配置全局鉴权参数-Authorize
