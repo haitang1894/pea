@@ -11,8 +11,8 @@ public enum ResultCode implements IErrorCode {
 	SUCCESS("0000", "操作成功"),
 	FAILED("500", "操作失败"),
 	VALIDATE_FAILED("400", "参数检验失败"),
-	UNAUTHORIZED("401", "暂未登录或token已经过期"),
-	FORBIDDEN("403", "暂未登录或token已经过期,没有相关权限"),
+	UNAUTHORIZED("8888", "暂未登录或token已经过期"),
+	FORBIDDEN("8889", "暂未登录或token已经过期,没有相关权限"),
 
 	ERROR_NAME_REPEAT("600", "姓名重复"),
 	ERROR_USER_NAME_REPEAT("601", "用户名重复");
