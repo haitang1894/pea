@@ -2,9 +2,10 @@
 
 ## 简介
 
-项目采用SpringBoot3.2 +
+  项目采用SpringBoot3.2 +
 JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](https://gitee.com/honghuangdc/soybean-admin)
 开发的简单权限系统。
+
 
 ## **技术选型：**
 
@@ -19,11 +20,12 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 | mysql        | 8.0.33 |
 | ...          | ...    |
 
-## TODO
+## TODO 预计7月搞定
 
-- [ ] 优化补充菜单
+- [x] 优化补充菜单
 - [ ] 优化日志管理
 - [ ] 开发实现Google二次认证
+- [ ] 实现按钮权限逻辑
 
 ## 后端部署
 
@@ -49,10 +51,17 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 
 - 账号：Soybean，密码：123456
 
-- 账号：admin，密码：admin123.
+- 账号：admin，密码：123456
 
 ## 注解
 
 - 日志记录注解 @SysLogInterface
 - 权限认证注解 @PreAuthorize("@pre.hasPermission('system:user:add')")
   目前 权限认证注解 开发并不完善,考虑前端暂未实现权限校验,没有进一步开发
+
+## 6月1日更修内容:
+
+1. 修改 添加/修改时候 创建人 创建人ID 不能获取问题
+2. 更新sql修改 admin账号 密码变成 123456
+  > update t_sys_user set `password` = '$2a$10$qbdPPGSnLm2oQwgLXyX8wOTgVZLHnm2pqS.We5.n6do3YfVxobCUy' where user_name = 'admin';
+3. 添加用户管理、角色管理、菜单管理的添加/修改接口
