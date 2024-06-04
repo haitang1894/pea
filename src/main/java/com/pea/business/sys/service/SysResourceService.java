@@ -3,6 +3,7 @@ package com.pea.business.sys.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pea.business.sys.domain.SysResource;
+import com.pea.business.sys.vo.SysMenuTreeVO;
 import com.pea.business.sys.vo.SysMenuVO;
 import com.pea.business.sys.vo.SysRoutesVO;
 import com.pea.common.api.Result;
@@ -21,4 +22,8 @@ public interface SysResourceService extends IService<SysResource> {
     List<String> getUserPermissions(Long id);
 
     Result<List<String>> getAllPages();
+
+    Result<List<SysMenuTreeVO>> getMenuTree();
+
+    Result<Integer> add(SysResource sysResource);
 }

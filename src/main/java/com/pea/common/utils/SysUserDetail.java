@@ -76,7 +76,7 @@ public class SysUserDetail implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return StatusEnums.ENABLE.getKey().equals(sysUser.getStatus());
+        return StatusEnums.ENABLE.getCode().equals(sysUser.getStatus());
     }
 
 }

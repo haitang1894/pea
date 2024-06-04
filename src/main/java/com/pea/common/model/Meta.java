@@ -37,7 +37,7 @@ public class Meta extends BaseEntity {
     private Boolean keepAlive;
 
     @Schema(description = "是否为常量路由")
-    private String constant;
+    private Boolean constant;
 
     @Schema(description = "本地图标路径")
     private String localIcon;
@@ -46,7 +46,7 @@ public class Meta extends BaseEntity {
     private String href;
 
     @Schema(description = "是否在菜单中隐藏")
-    private String hideInMenu;
+    private Boolean hideInMenu;
 
     @Schema(description = "激活的菜单键")
     private String activeMenu;
@@ -55,10 +55,13 @@ public class Meta extends BaseEntity {
     private Boolean multiTab;
 
     @Schema(description = "在标签页中固定索引位置")
-    private Boolean fixedIndexInTab;
+    private Integer fixedIndexInTab;
+
+    @Schema(description = "路由查询参数")
+    private List<String> query;
 
     // 添加无参构造函数
-    protected Meta() {}
+    public Meta() {}
 
     public Meta(String metaJson) {
         JSONObject jsonObject = JSONUtil.parseObj(metaJson);
@@ -76,12 +79,17 @@ public class Meta extends BaseEntity {
             roles = jsonObject.getJSONArray("roles").toList(String.class); // 假设roles是一个字符串数组
         }
         setKeepAlive(jsonObject.getBool("keepAlive", false));
-        setConstant(jsonObject.getStr("constant", ""));
+        setConstant(jsonObject.getBool("constant", null));
         setLocalIcon(jsonObject.getStr("localIcon", ""));
         setHref(jsonObject.getStr("href", ""));
-        setHideInMenu(jsonObject.getStr("hideInMenu", ""));
+        setHideInMenu(jsonObject.getBool("hideInMenu", null));
         setActiveMenu(jsonObject.getStr("activeMenu", ""));
         setMultiTab(jsonObject.getBool("multiTab", false));
-        setFixedIndexInTab(jsonObject.getBool("fixedIndexInTab", false));
+        setFixedIndexInTab(jsonObject.getInt("fixedIndexInTab", null));
+        if (!jsonObject.containsKey("query")) {
+            roles = Collections.emptyList();
+        } else {
+            roles = jsonObject.getJSONArray("query").toList(String.class);
+        }
     }
 }

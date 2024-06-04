@@ -2,6 +2,7 @@ package com.pea.business.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.pea.business.sys.domain.SysRole;
+import com.pea.business.sys.param.RoleParam;
 import com.pea.business.sys.service.SysRoleService;
 import com.pea.business.sys.vo.SysRoleVO;
 import com.pea.common.api.Result;
@@ -42,6 +43,24 @@ public class SysRoleController {
     @GetMapping(value = "/getAllRoles")
     public Result<List<SysRoleVO>> getAllRoles(@RequestHeader("Authorization") String authorizationHeader) {
         return sysRoleService.getAllRoles(authorizationHeader);
+    }
+
+    @Operation(summary = "新增角色信息")
+    @PostMapping(value = "/addRole")
+    public Result<Boolean> add(@RequestBody SysRole sysRole) {
+        return sysRoleService.add(sysRole);
+    }
+
+    @Operation(summary = "查询角色资源ID")
+    @PostMapping(value = "/getRoleResourceId")
+    public Result<List<Long>> getRoleResourceId(@RequestBody Long roleId) {
+        return sysRoleService.getRoleResourceId(roleId);
+    }
+
+    @Operation(summary = "修改角色资源信息")
+    @PostMapping(value = "/updateRoleResourceInfo")
+    public Result<Boolean> updateRoleResourceInfo(@RequestBody RoleParam roleParam) {
+        return sysRoleService.updateRoleResourceInfo(roleParam.getRoleId(), roleParam.getResourceId());
     }
 
 }

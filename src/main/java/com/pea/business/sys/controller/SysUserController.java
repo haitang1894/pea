@@ -43,9 +43,15 @@ public class SysUserController {
     @Operation(summary = "创建用户信息")
     @PostMapping(value = "/createUser")
     @SysLogInterface(title = "创建用户信息", businessType = BusinessType.INSERT)
-    @PreAuthorize("@pre.hasPermission('system:user:add')")
     public Result<String> createUser(@RequestBody CreateUserParam createUserParam) {
         return sysUserService.createUser(createUserParam);
+    }
+
+    @Operation(summary = "修改用户信息")
+    @PostMapping(value = "/update")
+    @SysLogInterface(title = "修改用户信息", businessType = BusinessType.UPDATE)
+    public Result<String> updateUser(@RequestBody CreateUserParam createUserParam) {
+        return sysUserService.updateUser(createUserParam);
     }
 
 }

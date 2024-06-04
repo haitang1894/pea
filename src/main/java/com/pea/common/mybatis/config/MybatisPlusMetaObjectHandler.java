@@ -2,7 +2,10 @@ package com.pea.common.mybatis.config;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.pea.business.sys.domain.SysUser;
+import com.pea.common.utils.SysUserDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.security.core.Authentication;
@@ -11,6 +14,7 @@ import org.springframework.util.ClassUtils;
 
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -22,22 +26,23 @@ public class MybatisPlusMetaObjectHandler  implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.debug("mybatis plus start insert fill ....");
         LocalDateTime localDateTime = DateUtil.date().toLocalDateTime();
-        final String userName = getUserName();
+        SysUser sysUser = Objects.requireNonNull(getUser()).getSysUser();
 
         fillValIfNullByName("createTime", localDateTime, metaObject, false);
         fillValIfNullByName("updateTime", localDateTime, metaObject, false);
-        fillValIfNullByName("createBy", userName, metaObject, false);
-        fillValIfNullByName("updateBy", userName, metaObject, false);
+        fillValIfNullByName("createId", sysUser.getId(), metaObject, false);
+        fillValIfNullByName("createBy", sysUser.getUserName(), metaObject, false);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         log.debug("mybatis plus start update fill ....");
         LocalDateTime localDateTime = DateUtil.date().toLocalDateTime();
-        final String userName = getUserName();
+        SysUser sysUser = Objects.requireNonNull(getUser()).getSysUser();
 
         fillValIfNullByName("updateTime", localDateTime, metaObject, true);
-        fillValIfNullByName("updateBy", userName, metaObject, true);
+        fillValIfNullByName("updateId", sysUser.getId(), metaObject, true);
+        fillValIfNullByName("updateBy", sysUser.getUserName(), metaObject, true);
     }
 
     /**
@@ -67,14 +72,17 @@ public class MybatisPlusMetaObjectHandler  implements MetaObjectHandler {
     }
 
     /**
-     * 获取 spring security 当前的用户名
-     * @return 当前用户名
+     * 获取 spring security 当前的用户
+     * @return 当前用户
      */
-    private String getUserName() {
+    private SysUserDetail getUser() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
+
+        log.info("authentication: {}", JSONUtil.parse(authentication));
+
         if (Optional.ofNullable(authentication).isPresent()) {
-            return authentication.getName();
+            return (SysUserDetail) authentication.getPrincipal();
         }
         return null;
     }

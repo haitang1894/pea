@@ -2,6 +2,7 @@ package com.pea.business.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.pea.business.sys.service.SysResourceService;
+import com.pea.business.sys.vo.SysMenuTreeVO;
 import com.pea.business.sys.vo.SysMenuVO;
 import com.pea.common.api.Result;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,12 @@ public class SysMenuController {
     @GetMapping(value = "/getAllPages")
     public Result<List<String>> getAllPages() {
         return sysResourceService.getAllPages();
+    }
+
+    @Operation(summary = "查询菜单树")
+    @GetMapping(value = "/getMenuTree")
+    public Result<List<SysMenuTreeVO>> getMenuTree() {
+        return sysResourceService.getMenuTree();
     }
 
 }

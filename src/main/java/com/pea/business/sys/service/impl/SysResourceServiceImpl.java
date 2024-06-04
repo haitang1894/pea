@@ -2,18 +2,25 @@ package com.pea.business.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pea.business.sys.domain.SysResource;
 import com.pea.business.sys.mapper.SysResourceMapper;
 import com.pea.business.sys.service.SysResourceService;
+import com.pea.business.sys.vo.SysMenuTreeVO;
 import com.pea.business.sys.vo.SysMenuVO;
 import com.pea.business.sys.vo.SysRoutesVO;
 import com.pea.common.api.Result;
+import com.pea.common.api.ResultCode;
 import com.pea.common.enums.DelStatusEnums;
 import com.pea.common.enums.MenuTypeEnums;
+import com.pea.common.enums.StatusEnums;
 import com.pea.common.exception.GlobalException;
 import com.pea.common.exception.GlobalExceptionEnum;
 import com.pea.common.model.Meta;
@@ -89,9 +96,8 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
             pageSize = Integer.parseInt(String.valueOf(params.get("size")));
             pageNum = Integer.parseInt(String.valueOf(params.get("current")));
         }
-        LambdaQueryWrapper<SysResource> lambdaQueryWrapper = getBaseQueryWrapper();
 
-        List<SysResource> list = list(lambdaQueryWrapper);
+        List<SysResource> list = getBaseQueryWrapper();
 
         List<SysMenuVO> menuVOS = convertSysResourceToMenuVO(list);
 
@@ -109,11 +115,11 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
     }
 
     // Method to create base LambdaQueryWrapper
-    private LambdaQueryWrapper<SysResource> getBaseQueryWrapper() {
+    private List<SysResource> getBaseQueryWrapper() {
         LambdaQueryWrapper<SysResource> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(SysResource::getIsDeleted, DelStatusEnums.DISABLE.getCode());
         lambdaQueryWrapper.notIn(SysResource::getMenuType, MenuTypeEnums.BASIC_MENU.getCode(), MenuTypeEnums.BUTTON.getCode());
-        return lambdaQueryWrapper;
+        return list(lambdaQueryWrapper);
     }
 
     // Method to convert SysResource to SysMenuVO
@@ -185,14 +191,91 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
 
     @Override
     public Result<List<String>> getAllPages() {
-        LambdaQueryWrapper<SysResource> lambdaQueryWrapper = getBaseQueryWrapper();
-        List<SysResource> list = list(lambdaQueryWrapper);
+        List<SysResource> list = getBaseQueryWrapper();
 
         List<String> routeNames = list.stream()
                 .map(SysResource::getRouteName)
                 .collect(Collectors.toList());
 
         return Result.success(routeNames);
+    }
+
+    @Override
+    public Result<List<SysMenuTreeVO>> getMenuTree() {
+        try {
+            List<SysResource> userRoutes = getBaseQueryWrapper();
+
+            List<SysMenuTreeVO> menuTree = routeUtil.getMenuTree(userRoutes);
+
+            return Result.success(menuTree);
+        } catch (Exception e) {
+            log.info("获取菜单权限信息异常: {}", e.getMessage());
+            throw new GlobalException(ResultCode.ERROR_GET_MENU_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public Result<Integer> add(SysResource sysResource) {
+        if (sysResource.getId() != 0) {
+            // update
+            if (StrUtil.isNotEmpty(sysResource.getRoutePath())) {
+
+                LambdaQueryWrapper<SysResource> sysResourceLambdaQueryWrapper = new LambdaQueryWrapper<>();
+
+                sysResourceLambdaQueryWrapper.eq(SysResource::getIsDeleted, DelStatusEnums.DISABLE.getCode());
+                sysResourceLambdaQueryWrapper.eq(SysResource::getRoutePath, sysResource.getRoutePath());
+
+                List<SysResource> sysResources = list(sysResourceLambdaQueryWrapper);
+
+                if (sysResources.isEmpty()) {
+                    return Result.failed(ResultCode.ERROR_RESOURCE_EXISTENCE);
+                }
+
+                log.info("修改资源入参: {}", JSONUtil.parse(sysResource));
+
+                LambdaUpdateWrapper<SysResource> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(SysResource::getId, sysResource.getId());
+
+                update(sysResource, lambdaUpdateWrapper);
+
+                return Result.success();
+            }
+        }
+
+        // add
+        // 随机8位字符串
+        String randomString = RandomUtil.randomString(8);
+
+        String uiPath;
+
+        if (ObjUtil.isNotEmpty(sysResource.getParentId()) && sysResource.getParentId() != 0) {
+
+            LambdaQueryWrapper<SysResource> sysResourceLambdaQueryWrapper = new LambdaQueryWrapper<>();
+
+            sysResourceLambdaQueryWrapper.eq(SysResource::getIsDeleted, DelStatusEnums.DISABLE.getCode());
+            sysResourceLambdaQueryWrapper.eq(SysResource::getId, sysResource.getParentId());
+
+            List<SysResource> sysResources = list(sysResourceLambdaQueryWrapper);
+
+            if (sysResources.isEmpty()) {
+                return Result.failed(ResultCode.ERROR_PARENT_RESOURCE_DOES_NOT_EXIST);
+            }
+
+            sysResource.setUiPath(sysResources.getFirst().getUiPath() + randomString + sysResource.getRoutePath());
+
+        }
+
+        uiPath = randomString + sysResource.getRoutePath();
+
+        sysResource.setUiPath(uiPath);
+        sysResource.setStatus(StatusEnums.ENABLE.getCode());
+        sysResource.setIsDeleted(DelStatusEnums.DISABLE.getCode());
+
+        log.info("新增资源入参: {}", JSONUtil.parse(sysResource));
+
+        save(sysResource);
+
+        return Result.success();
     }
 
 }

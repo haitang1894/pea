@@ -3,6 +3,7 @@ package com.pea.business.sys.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,6 +14,7 @@ import com.pea.business.sys.domain.SysUser;
 import com.pea.business.sys.mapper.SysUserMapper;
 import com.pea.business.sys.param.CreateUserParam;
 import com.pea.business.sys.service.SysRoleService;
+import com.pea.business.sys.service.SysUserRoleService;
 import com.pea.business.sys.service.SysUserService;
 import com.pea.business.sys.vo.SysUserVO;
 import com.pea.business.sys.vo.UserInfoVO;
@@ -56,6 +58,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
 
     final SysRoleService sysRoleService;
 
+    final SysUserRoleService sysUserRoleService;
+
     private static final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
@@ -97,12 +101,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     }
 
     private LambdaQueryWrapper<SysUser> createWrapper(Map<String, Object> params) {
-        String username = (String) params.get("username");
+        String username = (String) params.get("userName");
         String status = (String) params.get("status");
+        String userGender = (String) params.get("userGender");
+        String nickName = (String) params.get("nickName");
+        String userPhone = (String) params.get("userPhone");
+        String userEmail = (String) params.get("userEmail");
 
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StrUtil.isNotEmpty(username), SysUser::getUserName, username);
         wrapper.eq(StrUtil.isNotEmpty(status), SysUser::getStatus, status);
+        wrapper.eq(StrUtil.isNotEmpty(userGender), SysUser::getUserGender, userGender);
+        wrapper.eq(StrUtil.isNotEmpty(nickName), SysUser::getNickName, nickName);
+        wrapper.eq(StrUtil.isNotEmpty(userPhone), SysUser::getUserPhone, userPhone);
+        wrapper.eq(StrUtil.isNotEmpty(userEmail), SysUser::getUserEmail, userEmail);
         wrapper.eq( SysUser::getIsDeleted, DelStatusEnums.DISABLE.getCode());
 
         return wrapper;
@@ -145,30 +157,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         }
     }
 
-    public SysUser getByName(String nickName) {
+    public SysUser getByNickName(String nickName) {
         return getOne(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getNickName, nickName));
     }
 
-    public SysUser getByUsername(String userName) {
+    public SysUser getByUserName(String userName) {
         return getOne(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getUserName, userName));
     }
 
     private Result<String> checkoutUser(CreateUserParam userParam) {
-        String password = userParam.getPassword();
-        if (StrUtil.isEmpty(password)) {
-            return Result.failed(ResultCode.ERROR_USER_NAME_REPEAT);
+        SysUser sysUser;
+
+        sysUser = getByNickName(userParam.getNickName());
+        if (sysUser != null) {
+            if (!Objects.equals(userParam.getId(), sysUser.getId())) {
+                return Result.failed(ResultCode.ERROR_USER_NAME_REPEAT);
+            }
         }
 
-        SysUser dbUserNameInfo;
-
-        dbUserNameInfo = getByName(userParam.getNickName());
-        if (dbUserNameInfo != null) {
-            return Result.failed(ResultCode.ERROR_NAME_REPEAT);
-        }
-
-        dbUserNameInfo = getByUsername(userParam.getUserName());
-        if (dbUserNameInfo != null) {
-            return Result.failed(ResultCode.ERROR_USER_NAME_REPEAT);
+        sysUser = getByUserName(userParam.getUserName());
+        if (sysUser != null) {
+            if (!Objects.equals(userParam.getId(), sysUser.getId())) {
+                return Result.failed(ResultCode.ERROR_NAME_REPEAT);
+            }
         }
         return Result.success();
     }
@@ -176,14 +187,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     @Transactional(rollbackFor = Exception.class)
     public boolean insertUser(CreateUserParam createUserParam) {
         SysUser user = new SysUser();
-        String password = createUserParam.getPassword();
+        String password = createUserParam.getUserName();
         // 处理加密密码
         String enPassword = encoder.encode(password);
 
         user.setNickName(createUserParam.getNickName());
         user.setUserName(createUserParam.getUserName());
+        user.setUserGender(createUserParam.getUserGender());
+        user.setUserPhone(createUserParam.getUserPhone());
+        user.setUserEmail(createUserParam.getUserEmail());
         user.setPassword(enPassword);
-        user.setStatus(StatusEnums.ENABLE.getKey());
+        user.setStatus(StatusEnums.ENABLE.getCode());
+        user.setIsDeleted(DelStatusEnums.DISABLE.getCode());
 
         return save(user);
     }
@@ -195,7 +210,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
         if (!Objects.equals(checkoutResult.getCode(), ResultCode.SUCCESS.getCode())) {
             return checkoutResult;
         }
-        return insertUser(createUserParam) ? Result.success() : Result.failed();
+
+        if (!insertUser(createUserParam)) {
+            Result.failed(ResultCode.ERROR_CREATE_USER);
+        }
+
+        // 处理用户角色
+        bindingUserRoles(createUserParam);
+
+        return Result.success();
     }
 
     @Override
@@ -226,6 +249,44 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_UNABLE_GET_USER);
         }
         return Result.failed();
+    }
+
+    @Override
+    public Result<String> updateUser(CreateUserParam createUserParam) {
+        log.info("修改用户入参: {}", JSONUtil.parse(createUserParam));
+
+        Result<String> checkoutResult = checkoutUser(createUserParam);
+        if (!Objects.equals(checkoutResult.getCode(), ResultCode.SUCCESS.getCode())) {
+            return checkoutResult;
+        }
+
+        SysUser user = new SysUser();
+
+        user.setId(createUserParam.getId());
+        user.setNickName(createUserParam.getNickName());
+        user.setUserName(createUserParam.getUserName());
+        user.setUserGender(createUserParam.getUserGender());
+        user.setUserPhone(createUserParam.getUserPhone());
+        user.setUserEmail(createUserParam.getUserEmail());
+        user.setStatus(createUserParam.getStatus());
+
+        updateById(user);
+
+        // 修改用户角色信息
+        bindingUserRoles(createUserParam);
+
+        return Result.success();
+    }
+
+    private void bindingUserRoles(CreateUserParam userParam) {
+        List<String> userRoles = userParam.getUserRoles();
+        if (!userRoles.isEmpty()) {
+            SysUser sysUser = getByUserName(userParam.getUserName());
+            Result<Boolean> result = sysUserRoleService.bindingUserRoles(userRoles, sysUser.getId());
+            if (!Objects.equals(result.getCode(), ResultCode.SUCCESS.getCode())) {
+                throw new GlobalException("用户绑定角色失败");
+            }
+        }
     }
 
 

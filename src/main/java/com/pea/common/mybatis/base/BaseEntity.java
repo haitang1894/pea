@@ -41,7 +41,6 @@ public class BaseEntity implements Serializable {
 	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private LocalDateTime updateTime;
 
-	@TableLogic(value = "0")
 	@Schema(description = "是否已删除：0->未删除；1->已删除")
 	private Integer isDeleted;
 

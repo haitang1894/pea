@@ -39,7 +39,7 @@
     </sql>
 
     <select id="getUserRole" resultType="java.lang.String" parameterType="java.lang.String">
-        select role_name from t_sys_role tsr where tsr.id in (select role_id from t_sys_user_role where user_id = ${id})
+        select role_code from t_sys_role tsr where tsr.id in (select role_id from t_sys_user_role where user_id = ${id})
     </select>
 
 

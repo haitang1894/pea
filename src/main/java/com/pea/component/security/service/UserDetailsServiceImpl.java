@@ -54,7 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // 用户停用
-        if (StatusEnums.DISABLE.getKey().equals(user.getStatus())) {
+        if (StatusEnums.DISABLE.getCode().equals(user.getStatus())) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.USER_DISABLED);
         }
 

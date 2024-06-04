@@ -31,7 +31,7 @@ public interface SysUserService extends IService<SysUser> {
     LoginResult login(String username, String password);
 
     /**
-     * 登录
+     * 创建用户
      *
      * @param createUserParam 创建用户信息
      * @return 创建结果
@@ -44,4 +44,12 @@ public interface SysUserService extends IService<SysUser> {
      * @return UserInfoVO
      */
     Result<UserInfoVO> getUserInfo(String authorizationHeader);
+
+    /**
+     * 修改用户信息
+     *
+     * @param createUserParam 修改用户信息
+     * @return 修改结果
+     */
+    Result<String> updateUser(CreateUserParam createUserParam);
 }

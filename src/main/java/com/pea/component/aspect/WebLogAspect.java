@@ -76,7 +76,7 @@ public class WebLogAspect {
 
 			// *========数据库日志=========*//
 			SysOperationLog operLog = new SysOperationLog();
-			operLog.setStatus(StatusEnums.ENABLE.getKey());
+			operLog.setStatus(StatusEnums.ENABLE.getCode());
 			operLog.setIsDeleted(DelStatusEnums.DISABLE.getCode());
 			// 请求的地址
 			String ip = IpUtil.getIp(ServletUtils.getRequest());
@@ -89,7 +89,7 @@ public class WebLogAspect {
 			}
 
 			if (e != null) {
-				operLog.setStatus(StatusEnums.DISABLE.getKey());
+				operLog.setStatus(StatusEnums.DISABLE.getCode());
 				operLog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
 			}
 			// 设置方法名称

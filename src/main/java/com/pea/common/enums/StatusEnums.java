@@ -20,7 +20,7 @@ public enum StatusEnums {
 	 */
 	ENABLE("1", "启用"),;
 
-	private final String key;
+	private final String code;
 	
 	private final String name;
 
