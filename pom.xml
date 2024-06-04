@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.pea</groupId>
     <artifactId>pea</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.5-SNAPSHOT</version>
     <name>pea</name>
     <description>豌豆</description>
     <properties>
