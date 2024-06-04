@@ -53,6 +53,11 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 
 - 账号：admin，密码：123456
 
+考虑到soybeanjs作者前端暂时没有对接后端，为了方便新手拉取代码后再添加接口,在本项目web目录整理了需要调整的前端代码
+,找到位置直接覆盖即可,随后启动前端、后端就可以正常使用。下图是前端修改位置
+
+![img.png](img.png)
+
 ## 注解
 
 - 日志记录注解 @SysLogInterface
