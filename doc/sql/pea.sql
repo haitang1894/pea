@@ -230,8 +230,8 @@ CREATE TABLE `t_sys_user` (
 -- 表记录: t_sys_user 
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_sys_user` VALUES (1, '管理员', 'admin', '$2a$10$RdBAjlvTjY3E1awve4O7y.vROotZwnJw6e.rj0IZJQ9Dk1eRiCwyS', '1', '', '1', '13189770694', 'abc@qq.com', '2024-03-10 11:42:46', '192.168.31.51', 1, 'admin', '2020-01-01 19:00:00', 1, 'admin', '2024-03-10 11:42:46', 0, NULL);
-INSERT INTO `t_sys_user` VALUES (8, 'Soybean', 'Soybean', '$2a$10$CoWcan6u6BDnQ8w8m4tzPuc7hq.WyS4X.iiwSfujROWeGS28WeRxK', '1', NULL, '1', '13892700749', '123@qq.com', '2024-04-09 22:49:09', '192.168.2.128', 1, 'admin', '2024-03-09 21:56:34', NULL, NULL, '2024-04-09 22:49:09', 0, NULL);
+INSERT INTO `t_sys_user` VALUES (1, '管理员', 'admin', '$2a$10$qbdPPGSnLm2oQwgLXyX8wOTgVZLHnm2pqS.We5.n6do3YfVxobCUy', '1', '', '1', '13189770694', 'abc@qq.com', '2024-03-10 11:42:46', '192.168.31.51', 1, 'admin', '2020-01-01 19:00:00', 1, 'admin', '2024-03-10 11:42:46', 0, NULL);
+INSERT INTO `t_sys_user` VALUES (2, 'Soybean', 'Soybean', '$2a$10$qbdPPGSnLm2oQwgLXyX8wOTgVZLHnm2pqS.We5.n6do3YfVxobCUy', '1', NULL, '1', '13892700749', '123@qq.com', '2024-04-09 22:49:09', '192.168.2.128', 1, 'admin', '2024-03-09 21:56:34', NULL, NULL, '2024-04-09 22:49:09', 0, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -258,6 +258,6 @@ CREATE TABLE `t_sys_user_role` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `t_sys_user_role` VALUES (1, 1, 1, 1, 'admin', 1, 'admin', '2024-03-09 10:37:52', '2024-03-09 10:38:04', 0, NULL);
-INSERT INTO `t_sys_user_role` VALUES (2, 8, 1, 1, 'admin', 1, 'admin', '2024-03-10 13:10:39', '2024-03-10 13:10:41', 0, NULL);
+INSERT INTO `t_sys_user_role` VALUES (2, 2, 1, 1, 'admin', 1, 'admin', '2024-03-10 13:10:39', '2024-03-10 13:10:41', 0, NULL);
 COMMIT;
 SET FOREIGN_KEY_CHECKS = 1;
