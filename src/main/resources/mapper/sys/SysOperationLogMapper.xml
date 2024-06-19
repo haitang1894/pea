@@ -45,7 +45,7 @@
     </sql>
 
     <update id="clean">
-        truncate table t_sys_log
+        truncate table t_sys_operation_log
     </update>
 
 </mapper>
