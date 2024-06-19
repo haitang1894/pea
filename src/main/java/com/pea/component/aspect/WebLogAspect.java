@@ -3,16 +3,16 @@ package com.pea.component.aspect;
 import cn.hutool.json.JSONUtil;
 import com.pea.business.sys.domain.SysOperationLog;
 import com.pea.business.sys.domain.SysUser;
+import com.pea.business.sys.service.SysOperationLogService;
 import com.pea.common.annotation.SysLogInterface;
 import com.pea.common.enums.DelStatusEnums;
 import com.pea.common.enums.StatusEnums;
-import com.pea.common.manager.AsyncManager;
-import com.pea.common.manager.factory.AsyncFactory;
 import com.pea.common.utils.IpUtil;
 import com.pea.common.utils.SecurityUtil;
 import com.pea.common.utils.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -33,7 +33,10 @@ import java.util.Map;
 @Slf4j
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class WebLogAspect {
+
+	private final SysOperationLogService sysOperationLogService;
 
 	/**
 	 * 配置织入点
@@ -100,8 +103,9 @@ public class WebLogAspect {
 			operLog.setRequestMethod(ServletUtils.getRequest().getMethod());
 			// 处理设置注解上的参数
 			getControllerMethodDescription(joinPoint, controllerLog, operLog);
-			// 保存数据库
-			AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+			// TODO 保存数据库 需要处理成异步
+//			AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+			sysOperationLogService.save(operLog);
 		}
 		catch (Exception exp) {
 			// 记录本地异常日志
