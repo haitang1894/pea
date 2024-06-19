@@ -5,7 +5,9 @@ import com.pea.business.sys.domain.SysRole;
 import com.pea.business.sys.param.RoleParam;
 import com.pea.business.sys.service.SysRoleService;
 import com.pea.business.sys.vo.SysRoleVO;
+import com.pea.common.annotation.SysLogInterface;
 import com.pea.common.api.Result;
+import com.pea.common.enums.BusinessType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -34,6 +36,7 @@ public class SysRoleController {
             @Parameter(name = "username", description = "用户名称"),
     })
     @GetMapping(value = "/getRoleList")
+    @SysLogInterface(title = "查询角色信息", businessType = BusinessType.OTHER)
     public Result<IPage<SysRole>> list(@Parameter(hidden = true) @RequestParam Map<String, Object> params) {
         IPage<SysRole> sysUsers = sysRoleService.getPage(params);
         return Result.success(sysUsers);

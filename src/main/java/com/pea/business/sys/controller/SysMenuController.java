@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.pea.business.sys.service.SysResourceService;
 import com.pea.business.sys.vo.SysMenuTreeVO;
 import com.pea.business.sys.vo.SysMenuVO;
+import com.pea.common.annotation.SysLogInterface;
 import com.pea.common.api.Result;
+import com.pea.common.enums.BusinessType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -35,7 +37,7 @@ public class SysMenuController {
             @Parameter(name = "current", description = "当前页", required = true, example = "1"),
             @Parameter(name = "size", description = "每页显示条数", required = true, example = "10"),
     })
-
+    @SysLogInterface(title = "查询菜单信息", businessType = BusinessType.OTHER)
     // @PreAuthorize("@pre.hasPermission('sys:menu:list')")
     public Result<IPage<SysMenuVO>> getMenuList(@Parameter(hidden = true) @RequestParam Map<String, Object> params) {
         return sysResourceService.getMenuList(params);

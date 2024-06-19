@@ -35,6 +35,7 @@ public class SysUserController {
             @Parameter(name = "username", description = "用户名称"),
     })
     @GetMapping(value = "/getUserList")
+    @SysLogInterface(title = "查询用户信息", businessType = BusinessType.OTHER)
     public Result<IPage<SysUserVO>> list(@Parameter(hidden = true) @RequestParam Map<String, Object> params) {
         IPage<SysUserVO> sysUsers = sysUserService.getList(params);
         return Result.success(sysUsers);
