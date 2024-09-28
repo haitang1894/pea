@@ -2,7 +2,7 @@
 
 ## 简介
 
-  项目采用SpringBoot3.2 +
+  项目采用SpringBoot3.3 +
 JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](https://gitee.com/honghuangdc/soybean-admin)
 开发的简单权限系统。
 
@@ -11,19 +11,19 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 
 | 依赖           | 版本     |
 |--------------|--------|
-| Spring Boot  | 3.2.4  |
+| Spring Boot  | 3.3.0  |
 | JDK          | 21     |
-| Mybatis-Plus | 3.5.5  |
+| Mybatis-Plus | 3.5.8  |
 | hutool       | 5.8.25 |
 | knife4j      | 4.5.0  |
 | jwt          | 0.9.1  |
 | mysql        | 8.0.33 |
 | ...          | ...    |
 
-## TODO 预计7月搞定
+## TODO 不固定更新
 
 - [x] 优化补充菜单
-- [ ] 优化日志管理
+- [x] 优化日志管理
 - [ ] 开发实现Google二次认证
 - [ ] 实现按钮权限逻辑
 
@@ -53,7 +53,8 @@ JDK21、MyBatis-Plus、SpringSecurity安全框架等，适配 [soybean-admin](ht
 
 - 账号：admin，密码：123456
 
-考虑到soybeanjs作者前端暂时没有对接后端，为了方便新手拉取代码后再添加接口,在本项目web目录整理了需要调整的前端代码
+
+（弃用）考虑到soybeanjs作者前端暂时没有对接后端，为了方便新手拉取代码后再添加接口,在本项目web目录整理了需要调整的前端代码
 ,找到位置直接覆盖即可,随后启动前端、后端就可以正常使用。下图是前端修改位置
 
 ![img.png](img.png)
