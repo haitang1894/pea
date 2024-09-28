@@ -71,7 +71,7 @@
             FROM
                 t_sys_user_role p
                     JOIN t_sys_role r ON p.role_Id = r.id
-                    AND p.user_id = ${id} AND p.is_deleted = 0
+                    AND p.user_id = #{id} AND p.is_deleted = 0
                     AND r.STATUS = 1 AND r.is_deleted = 0
                     JOIN t_sys_role_resource rmb ON rmb.role_id = r.id AND rmb.is_deleted = 0 UNION
             SELECT
@@ -89,7 +89,7 @@
     </select>
 
     <select id="getUserPermissions" resultType="java.lang.String"
-            parameterType="java.lang.String">
+            parameterType="java.lang.Long">
         SELECT
         m.route_name
         FROM
@@ -102,7 +102,7 @@
         FROM
         t_sys_user_role p
         JOIN t_sys_role r ON p.role_Id = r.id
-        AND p.user_id = ${id} AND p.is_deleted = 0
+        AND p.user_id = #{id} AND p.is_deleted = 0
         AND r.STATUS = 1 AND r.is_deleted = 0
         JOIN t_sys_role_resource rmb ON rmb.role_id = r.id AND rmb.is_deleted = 0 UNION
         SELECT
