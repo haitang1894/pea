@@ -71,7 +71,7 @@ CREATE TABLE `t_sys_resource` (
   `parent_id` int NOT NULL COMMENT '父节点id',
   `ui_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '唯一标识路径',
   `menu_type` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '1：菜单路由；2：资源（按钮）3: 基础资源',
-  `status` varchar(1) COLLATE utf8mb4_bin NOT NULL COMMENT '状态；1:可用，2:禁用',
+  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '状态；1:可用，2:禁用',
   `menu_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
   `route_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '路由名称',
   `route_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '菜单路由为path，其他为唯一标识',
@@ -79,11 +79,11 @@ CREATE TABLE `t_sys_resource` (
   `meta` varchar(455) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '元数据',
   `weight` int DEFAULT NULL COMMENT '权重顺序',
   `create_id` bigint NOT NULL COMMENT '创建者ID',
-  `create_by` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT '创建者名称',
-  `update_id` bigint NOT NULL COMMENT '修改者ID',
-  `update_by` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT '修改者名称',
+  `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '创建者名称',
+  `update_id` bigint DEFAULT NULL COMMENT '修改者ID',
+  `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '修改者名称',
   `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '是否已删除：0->未删除；1->已删除',
   `delete_time` datetime DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`),
@@ -127,22 +127,22 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sys_role`;
 CREATE TABLE `t_sys_role` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `role_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '角色code',
-  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态；1:可用，2:禁用',
-  `role_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `type` tinyint NOT NULL COMMENT '类型：1:公共角色；2:特殊角色',
-  `create_id` bigint NOT NULL COMMENT '创建者ID',
-  `create_by` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT '创建者名称',
-  `update_id` bigint NOT NULL COMMENT '修改者ID',
-  `update_by` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT '修改者名称',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT '是否已删除：0->未删除；1->已删除',
-  `delete_time` datetime DEFAULT NULL COMMENT '删除时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='角色表';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `role_name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+    `role_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '角色code',
+    `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态；1:可用，2:禁用',
+    `role_desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+    `type` tinyint NOT NULL COMMENT '类型：1:公共角色；2:特殊角色',
+    `create_id` bigint NOT NULL COMMENT '创建者ID',
+    `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '创建者名称',
+    `update_id` bigint DEFAULT NULL COMMENT '修改者ID',
+    `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '修改者名称',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `is_deleted` tinyint DEFAULT '0' COMMENT '是否已删除：0->未删除；1->已删除',
+    `delete_time` datetime DEFAULT NULL COMMENT '删除时间',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='角色表';
 
 -- ----------------------------
 -- 表记录: t_sys_role 
@@ -239,19 +239,19 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sys_user_role`;
 CREATE TABLE `t_sys_user_role` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
-  `user_id` bigint NOT NULL COMMENT '用户id',
-  `role_id` bigint NOT NULL COMMENT '角色id',
-  `creator_id` bigint unsigned DEFAULT NULL,
-  `creator_by` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `update_id` bigint unsigned DEFAULT NULL,
-  `update_by` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `is_deleted` tinyint NOT NULL DEFAULT '0',
-  `delete_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户角色关联表';
+   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+   `user_id` bigint NOT NULL COMMENT '用户id',
+   `role_id` bigint NOT NULL COMMENT '角色id',
+   `create_id` bigint unsigned DEFAULT NULL,
+   `create_by` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+   `update_id` bigint unsigned DEFAULT NULL,
+   `update_by` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+   `create_time` datetime NOT NULL,
+   `update_time` datetime DEFAULT NULL,
+   `is_deleted` tinyint NOT NULL DEFAULT '0',
+   `delete_time` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户角色关联表';
 
 -- ----------------------------
 -- 表记录: t_sys_user_role 
