@@ -4,6 +4,17 @@ interface Props {
 }
 
 defineProps<Props>();
+
+const searchParams = { current: 1 };
+
+const getData = () => {
+  // TODO: load data
+};
+
+const getSearch = () => {
+  searchParams.current = 1;
+  getData();
+};
 </script>
 
 <template>
